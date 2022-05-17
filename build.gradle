@@ -1,0 +1,59 @@
+plugins {
+    id 'java'
+    id "io.qameta.allure" version "2.9.6"
+    id "io.freefair.lombok" version "6.0.0-m2"
+}
+
+group 'md.vgorceac'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    cucumberVersion = '7.1.0'
+    springBootStarterVersion = '2.6.2'
+    snakeYamlVersion = '1.28'
+    apacheCommonsVersion = '3.12.0'
+    allureVersion = '2.17.2'
+    log4j2Version = '2.14.1'
+    retrofitVersion = '2.9.0'
+}
+
+allure {
+    adapter {
+        allureJavaVersion = allureVersion
+        frameworks {
+            cucumberJvm
+        }
+    }
+}
+
+dependencies {
+    implementation group: 'io.cucumber', name: 'cucumber-java', version: cucumberVersion
+    implementation group: 'io.cucumber', name: 'cucumber-testng', version: cucumberVersion
+    implementation group: 'io.cucumber', name: 'cucumber-spring', version: cucumberVersion
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: springBootStarterVersion
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootStarterVersion
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: apacheCommonsVersion
+    implementation group: 'io.qameta.allure', name: 'allure-cucumber7-jvm', version: allureVersion
+    implementation group: 'io.qameta.allure', name: 'allure-test-filter', version: allureVersion
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4j2Version
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4j2Version
+    implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: retrofitVersion
+    implementation group: 'com.squareup.retrofit2', name: 'converter-jackson', version: retrofitVersion
+
+}
+
+test {
+    systemProperty "dataproviderthreadcount", System.getProperty("parallelthreads", '1')
+    ignoreFailures = true
+    useTestNG {
+        systemProperties System.getProperties()
+    }
+    outputs.upToDateWhen { false }
+    maxHeapSize = "1024m"
+    scanForTestClasses = false
+    testLogging.showStandardStreams = true
+}
